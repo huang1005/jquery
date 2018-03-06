@@ -5,8 +5,63 @@
     <title>jquery封装</title>
 </head>
 <body>
-    <div></div>
-    <div></div>
-    <div></div>
+<div></div>
+<div></div>
+<div></div>
+<script>
+    // 这里用构造函数、每次都要用new 来创建对象 因此创建工厂函数
+
+    // jquery其实就是一个沙箱
+    ;
+    (function (window) {
+//创造构造函数
+        var version = "1.2.1";
+        var Jquery = function (select) {
+            return new Jquery.fn.init(select);
+        }
+//        原型替换因为原型里可以写很多东西
+        Jquery.fn = Jquery.prototype = {
+            jquery: version,
+            constructor: Jquery,
+            splice: [].splice,
+            extend: function (obj) {
+                for (var k in obj) {
+                    if (obj.hasOwnProperty(k)) {
+                        this[k] = obj[k];
+                    }
+                }
+            },
+            seyhello:function(){
+                console.log(456);
+            }
+        }
+        Jquery.fn.extend({
+            addClass:function(name){
+                for(var i =0;i<this.length;i++){
+                    this[i].classList.add(name);
+                }
+                return this;
+            },
+            removeClass:function(name){
+                for(var i =0;i<this.length;i++){
+                    this[i].classList.remove(name);
+                }
+                return this;
+            }
+        })
+//        init 才是构造函数 这里为什么这样写 因为 这里是一个沙箱 外部访问不到init 所以把init 添加到jquery的原型中去
+        var init = Jquery.fn.init = function (select) {
+            var element = document.querySelectorAll(select);
+            [].push.apply(this,element);
+        }
+//           把构造函数指向工厂函数
+        init.prototype = Jquery.prototype;
+
+//        暴露两个变量
+        window.Jquery = window.$ = Jquery;
+    })(window);
+
+    $("div:nth-child(1)").addClass('b').removeClass("a").addClass("c");
+</script>
 </body>
 </html>

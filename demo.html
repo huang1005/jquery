@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>原型</title>
+</head>
+<body>
+<script>
+    function Prean(){
+        console.log(123);
+    }
+    Prean.prototype.sayHello = function(){
+        console.log(456);
+    }
+    var p = new Prean();
+    p.sayHello();
+//    这里原型被替换后 再用这个构造函数new 出来的对象就访问不了以前原型上东西了
+    Prean.fn = Prean.prototype = {
+        constructor:Prean,
+        mas:"1"
+    };
+    Prean.fn.init = function(){
+        console.log(56);
+    }
+    var c = new Prean();
+    c.init();
+</script>
+</body>
+</html>
